@@ -1,0 +1,390 @@
+//12. Проверить, является ли введенное число простым.
+#include <stdio.h>
+#include <stdlib.h>
+
+int isPrime(int fn);
+
+int main()
+{
+	int num, primarity;
+
+	puts("Enter the number:");
+	scanf_s("%u", &num);
+
+	primarity = isPrime(num);
+
+	if (primarity == 1)
+	{
+		puts("The number is prime\n");
+	}
+	else
+	{
+		puts("The number isn't prime\n");
+	}
+
+	system("pause");
+
+	return 0;
+}
+
+int isPrime(int fn)
+{
+	int fprimarity = 1;
+	int i;
+
+	for (i = 2; i < fn / 2; i++)
+	{
+		if (fn % i == 0)
+		{
+			fprimarity = 0;
+		}
+	}
+	
+	return fprimarity;
+}
+
+/* 8. Найти
+•	max{i*ai}, 
+•	max{ai*ai}
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+
+void input(int* farr, int fn);
+
+int max_i_ai(int* farr, int fn);
+
+int max_ai_squared(int* farr, int fn);
+
+int main()
+{
+	int* arr = NULL;
+	int size, max1, max2;
+
+	puts("Enter size of the array:");
+	scanf_s("%u", &size);
+
+	arr = (int*)malloc(size * sizeof(int));
+
+	input(arr, size);
+
+	max1 = max_i_ai(arr, size);
+
+	max2 = max_ai_squared(arr, size);
+
+	printf("max{i*ai} = %d,\tmax{ai*ai} = %d\n", max1, max2);
+
+	free(arr);
+
+	system("pause");
+
+	return 0;
+}
+
+void input(int* farr, int fn)
+{
+	int i;
+
+	puts("Enter the terms of array:");
+
+	for (i = 0; i < fn; i++)
+	{
+		scanf_s("%d", farr + i);
+	}
+
+}
+
+int max_i_ai(int* farr, int fn)
+{
+	int i, max_i_ai;
+	
+	if (fn > 1)
+	{
+		for (i = 0; i < fn - 1; i++)
+		{
+
+			max_i_ai = (*(farr + i) * i) > (*(farr + i + 1) * (i + 1)) ? (*(farr + i) * i) : (*(farr + i + 1) * (i + 1));
+		}
+	}
+	else
+	{
+		max_i_ai = 0;
+	}
+
+	return max_i_ai;
+}
+
+int max_ai_squared(int* farr, int fn)
+{
+	int i, max_ai_squared;
+
+	if (fn > 1)
+	{
+		for (i = 0; i < fn - 1; i++)
+		{
+			max_ai_squared = (*(farr + i) * *(farr + i)) > (*(farr + i + 1) * *(farr + i + 1)) ? (*(farr + i) * *(farr + i)) : (*(farr + i + 1) * *(farr + i + 1));
+		}
+	}
+	else
+	{
+		max_ai_squared = (*farr) * (*farr);
+	}
+
+	return max_ai_squared;
+}
+
+#include <stdio.h>
+#include <stdlib.h>
+
+void number_swapper(char* fnum, char* fswapped, int cur_num_sys, int swapped_num_sys);
+
+int main()
+{
+	char num[65], swapped_num[65];
+	int num_sys;
+
+	puts("Enter the number:");
+	scanf_s("%s", num);
+
+	puts("Enter the numeric system:");
+	scanf_s("%u", &num_sys);
+
+	number_swapper(num, swapped_num, num_sys, 2);
+
+	printf("Swapped number: %s", swapped_num);
+
+	system("pause");
+
+	return 0;
+}
+
+void number_swapper(char* fnum, char* fswapped, int cur_num_sys, int swapped_num_sys)
+{
+	if ((cur_num_sys < 1) || (cur_num_sys >= 16) || (swapped_num_sys < 1) || (swapped_num_sys >= 16))
+	{
+		puts("Invalid input");
+		exit(0);
+	}
+
+	int i = 0;
+	int to_alt = 0;
+	int temp, temp_arr[64], cnt;
+	unsigned long long dec_temp = 0;
+
+	if (fnum[0] == '-')
+	{
+		i = 1;
+		to_alt = 1;
+		fswapped[0] = '-';
+	}
+
+	for (i; i < strlen(fnum); i++)
+	{
+		switch (fnum[i]) 
+		{
+			case '0':  temp = 0;
+			case '1':  temp = 1;
+			case '2':  temp = 2;
+			case '3':  temp = 3;
+			case '4':  temp = 4;
+			case '5':  temp = 5;
+			case '6':  temp = 6;
+			case '7':  temp = 7;
+			case '8':  temp = 8;
+			case '9':  temp = 9;
+			case 'A':  temp = 10;
+			case 'B':  temp = 11;
+			case 'C':  temp = 12;
+			case 'D':  temp = 13;
+			case 'E':  temp = 14;
+			case 'F':  temp = 15;
+		}
+
+		dec_temp += temp * pow(cur_num_sys, i);
+	}
+
+	i = 0;
+
+	while (dec_temp == 0)
+	{
+		temp = dec_temp % swapped_num_sys;
+		dec_temp /= swapped_num_sys;
+
+		temp_arr[i] = temp;
+
+		i++;
+	}
+
+	for (cnt = 0; cnt <= i / 2; cnt++)
+	{
+		temp = temp_arr[cnt];
+		temp_arr[cnt] = temp_arr[i - cnt];
+		temp_arr[i - cnt] = temp;
+	}
+
+	if (to_alt == 1)
+	{
+		i++;
+	}
+
+	cnt = 0;
+
+	for (to_alt; to_alt <= i; to_alt++)
+	{
+		switch (temp_arr[cnt])
+		{
+			default:  fswapped[to_alt] = temp_arr[cnt] + '0';
+			case 10:  fswapped[to_alt] = 'A';
+			case 11:  fswapped[to_alt] = 'B';
+			case 12:  fswapped[to_alt] = 'C';
+			case 13:  fswapped[to_alt] = 'D';
+			case 14:  fswapped[to_alt] = 'E';
+			case 15:  fswapped[to_alt] = 'F';
+		}
+	}
+}
+
+// 10.	Найти сумму цифр целого неотрицательного числа.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int sum_num_finder(int fnum);
+
+int main()
+{
+	int num, sum_num;
+
+	puts("Enter positive number:");
+	scanf_s("%u", &num);
+	
+	sum_num = sum_num_finder(num);
+
+	printf("Sum of the numerals of entered number: %d\n", sum_num);
+
+	system("pause");
+
+	return 0;
+}
+int sum_num_finder(int fnum)
+{
+	int fsum = 0;
+	int i = 0;
+	int temp = fnum;
+
+	while (fnum != 0)
+	{
+		fsum += fnum % 10;
+
+		fnum /= 10;
+		
+		i++;
+	}
+
+	return fsum;
+}
+//11.Определить, образуют ли цифры в записи числа строго возрастающую (убывающую) последовательность.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+void input(int* farr, int fn);
+
+void output(int* farr, int fn);
+
+int is_increasing(int* farr, int fn);
+
+int is_decreasing(int* farr, int fn);
+
+int main()
+{
+	int* arr = NULL;
+	int size, isIncr, isDecr;
+
+	puts("Enter size of the array:");
+	scanf_s("%u", &size);
+
+	arr = (int*)malloc(size * sizeof(int));
+
+	input(arr, size);
+
+	output(arr, size);
+
+	isIncr = is_increasing(arr, size);
+
+	isDecr = is_increasing(arr, size);
+
+	if (isIncr == 1)
+	{
+		puts("The sequence is increasing\n");
+	}
+	else if (isDecr == 1)
+	{
+		puts("The sequence is decreasing\n");
+	}
+	else
+	{
+		puts("The sequence neither increasing nor decreasing\n");
+	}
+
+	free(arr);
+
+	system("pause");
+
+	return 0;
+}
+
+void input(int* farr, int fn)
+{
+	int i;
+
+	puts("Enter the terms of array:");
+
+	for (i = 0; i < fn; i++)
+	{
+		scanf_s("%d", farr + i);
+	}
+}
+
+void output(int* farr, int fn)
+{
+	int i;
+
+	for (i = 0; i < fn; i++)
+	{
+		printf("arr[%d] = %d\n", i, *(farr + i));
+	}
+}
+
+int is_increasing(int* farr, int fn)
+{
+	int i;
+	int incr = 1;
+
+	for (i = 0; i < fn - 1; i++)
+	{
+		if (*(farr + i) <= *(farr + i + 1))
+		{
+			incr = 0;
+		}
+	}
+
+	return incr;
+}
+
+int is_decreasing(int* farr, int fn)
+{
+	int i;
+	int decr = 1;
+
+	for (i = 0; i < fn - 1; i++)
+	{
+		if (*(farr + i) >= *(farr + i + 1))
+		{
+			decr = 0;
+		}
+	}
+
+	return decr;
+}
